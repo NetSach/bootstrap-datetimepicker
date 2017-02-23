@@ -315,15 +315,77 @@ $('#date-end').datetimepicker({
 ![](http://s32.postimg.org/55x4fud05/Screen_Shot_2016_05_17_at_5_43_34_PM.png)
 
 
-### onRender
+### onRenderYear
 
-This event is fired when a day is rendered inside the datepicker. Should return a string. Return 'disabled' to disable the day from being selected.
+This event is fired when a year is rendered inside the datepicker. Should return an array of classes to add to this element. Return ['disabled'] to disable the day from being selected.
 
 ```javascript
-$('#date-end')
+$('#date')
     .datetimepicker({
-        onRender: function(date) {
-            return ev.date.valueOf() < date-start-display.valueOf() ? ' disabled' : '';
+        onRenderYear: function(date) {
+            //Disable picking dates from any year apart from 2015/2016
+            if (date.getFullYear() < 2015 || date.getFullYear() > 2016)
+                return ['disabled']
+        }
+    });
+```
+
+### onRenderMonth
+
+This event is fired when a month is rendered inside the datepicker. Should return an array of classes to add to this element. Return ['disabled'] to disable the day from being selected.
+
+```javascript
+$('#date')
+    .datetimepicker({
+        onRenderMonth: function(date) {
+            //Disable every other month in the year 2016
+            if (date.getUTCMonth() % 2 === 0 && date.getUTCFullYear() === 2016)
+                return ['disabled']
+        }
+    });
+```
+
+### onRenderDay
+
+This event is fired when a day is rendered inside the datepicker. Should return an array of classes to add to this element. Return ['disabled'] to disable the day from being selected.
+
+```javascript
+$('#date')
+    .datetimepicker({
+        onRenderDay: function(date) {
+            //Disable dates 18-24 of every month
+            if (date.getDate() >= 18 && date.getDate() <= 24)
+                return ['disabled'];
+        }
+    });
+```
+
+### onRenderHour
+
+This event is fired when a hour is rendered inside the datepicker. Should return an array of classes to add to this element. Return ['disabled'] to disable the day from being selected.
+
+```javascript
+$('#date')
+    .datetimepicker({
+        onRenderHour: function(hour) {
+            //Disable any time between 12:00 and 13:59
+            if (date.getUTCHours() === 12 || date.getUTCHours() === 13)
+                return ['disabled'];
+        }
+    });
+```
+
+### onRenderMinute
+
+This event is fired when a minute is rendered inside the datepicker. Should return an array of classes to add to this element. Return ['disabled'] to disable the day from being selected.
+
+```javascript
+$('#date')
+    .datetimepicker({
+        onRenderMinute: function(minute) {
+            //Disable all times between 30 past and 20 to every hour for workdays
+            if (date.getDay() !== 0 && date.getDay() !== 6 && date.getUTCMinutes() >= 30 && date.getUTCMinutes() <= 40)
+                return ['disabled'];
         }
     });
 ```
